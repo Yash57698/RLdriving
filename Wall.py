@@ -9,16 +9,17 @@ class Wall:
     def render(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
 
-    def collision(self, car):
+    def collision(self, car,dt):
         if self.rect.colliderect(car.hitbox):
+            car.pos -= (car.vel.dot(self.normal)*self.normal) * dt
+            car.heading = car.heading.rotate(-car.lastrotation)
             vcar = car.vel - (2 * (car.vel.dot(self.normal))*self.normal)
-            
-            # car.speed = vcar.length()
-            # if(vcar.dot(car.vel) < 0):
-            car.speed = -car.speed
-            # car.heading = vcar.normalize()
+            car.vel = vcar
+            car.speed = vcar.dot(car.heading)
+        
 
-    def ballcollision(self,ball):
+    def ballcollision(self,ball,dt):
         if self.rect.colliderect(pygame.Rect(ball.pos,(ball.image.get_width(),ball.image.get_height()))):
             ball.pos = ball.pos
+            ball.pos -= (ball.vel.dot(self.normal)*self.normal) * dt
             ball.vel = ball.vel.reflect(self.normal)
