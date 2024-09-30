@@ -11,8 +11,11 @@ class Wall:
 
     def collision(self, car,dt):
         if self.rect.colliderect(car.hitbox):
-            car.pos -= (car.vel.dot(self.normal)*self.normal) * dt
+            
+            
             car.heading = car.heading.rotate(-car.lastrotation)
+            car.pos -= 2*(abs(car.vel.dot(self.normal))*self.normal) * dt
+            
             vcar = car.vel - (2 * (car.vel.dot(self.normal))*self.normal)
             car.vel = vcar
             car.speed = vcar.dot(car.heading)

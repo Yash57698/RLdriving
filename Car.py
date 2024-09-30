@@ -10,7 +10,7 @@ class Car:
         self.pos = pygame.Vector2(pos)
         self.vel = pygame.Vector2(0,0.1)
         self.heading = pygame.Vector2(0,1)
-        self.image =  pygame.transform.scale_by(pygame.image.load("C:/Users/yashs/Desktop/Project/RLdriving/kenney_racing-pack/PNG/Cars/car_black_1.png"),0.4)
+        self.image =  pygame.transform.scale_by(pygame.image.load("./kenney_racing-pack/PNG/Cars/car_black_1.png"),0.4)
         self.speed =0 
         self.hitbox = pygame.transform.rotate(self.image,pygame.Vector2.angle_to(self.heading,(0,1))).get_rect(topleft = self.pos)
         self.lastrotation = 0
@@ -18,8 +18,9 @@ class Car:
         self.reward =0
 
     def tick(self,dt,inputup = False,inputdown = False,inputright = False,inputleft = False):
-    
-        keys = pygame.key.get_pressed()
+        
+        self.laststate = (self.pos,self.vel,self.heading,self.speed)
+        
         self.speed = self.speed * self.deaccfactor
         
         if inputup or inputdown:
@@ -36,10 +37,9 @@ class Car:
 
         if inputup:
             self.heading = self.heading.rotate(-(inputleft-inputright)*self.turnacc*dt)
-            self.lastrotation = -(inputleft-inputright)*self.turnacc*dt
         if inputdown:
             self.heading = self.heading.rotate((inputleft-inputright)*self.turnacc*dt)
-            self.lastrotation = (inputleft-inputright)*self.turnacc*dt
+        self.speed = self.vel.dot(self.heading)
         
 
     def render(self,screen):
